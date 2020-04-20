@@ -52,20 +52,21 @@ class `+className+` extends IconData {
             // Assume first line is ok
             if (result.length >= 1){
                 const lineSelected = result[0];
-                let cssKey = lineSelected.split(":")[0].replace("$","").replace("la-","");
+                let cssKey = cleanGlyphName(lineSelected.split(":")[0].replace("$","").replace("la-",""));
                 if (!addedGlyphs.includes(cssKey)){
-                    if (!isVarName(cssKey)){
+                    if (cssKey == "500px"){
                         cssKey = 'la_' + cssKey;
                         if (!isVarName(cssKey)) continue;
                     }
-                    staticMappingOutput += '    static const IconData ' + cleanGlyphName(cssKey) + ' = const ' + className + '(0x' + unicodeString + ');\n';
+
+                    staticMappingOutput += '    static const IconData ' + cssKey + ' = const ' + className + '(0x' + unicodeString + ');\n';
                     addedGlyphs.push(cssKey);
                 }
             }
         }
     }
     staticMappingOutput += '}';
-
+    
     await writeFile("../lib/line_awesome_icons.dart", fileOutput + '\n' + staticMappingOutput);    
 }
 
